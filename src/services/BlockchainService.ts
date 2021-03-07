@@ -28,7 +28,9 @@ export class BlockchainService {
 
   public async getBalance(): Promise<string> {
     if (await this.isConnected()) {
-      return await this.web3.eth.getBalance(this.web3.eth.defaultAccount as string);
+      return Number(
+        this.web3.utils.fromWei(await this.web3.eth.getBalance(this.web3.eth.defaultAccount as string)),
+      ).toFixed(5);
     } else {
       throw new Error('Not connected to blockchain network.');
     }

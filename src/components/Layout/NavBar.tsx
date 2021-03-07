@@ -6,6 +6,14 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { BlockchainStateModel } from './Layout';
+
+export interface INavBarProps {
+  blockchain: BlockchainStateModel;
+  getBalanceHandler: () => Promise<void>;
+  accountClickHandler: (content: JSX.Element) => void;
+  connectHandler: () => Promise<void>;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const NavBar: (props: any) => JSX.Element = (props: any): JSX.Element => {
+const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.Element => {
   const classes = useStyles();
 
   useEffect(() => {
@@ -36,8 +44,19 @@ const NavBar: (props: any) => JSX.Element = (props: any): JSX.Element => {
     console.log('NavBar > useEffect > AFTER getBalance');
   }, [props.blockchain.isConnected]);
 
-  const balanceContainer = props.blockchain.accountAddress ? (
-    <Button color="inherit">{props.blockchain.accountAddress}</Button>
+  const balanceContainer: JSX.Element = props.blockchain.accountAddress ? (
+    <Button
+      onClick={() =>
+        props.accountClickHandler(
+          <div>
+            <h3>{props.blockchain.balance}</h3>
+          </div>,
+        )
+      }
+      color="inherit"
+    >
+      {props.blockchain.accountAddress}
+    </Button>
   ) : (
     <Button onClick={props.connectHandler} color="inherit">
       Connect Wallet
