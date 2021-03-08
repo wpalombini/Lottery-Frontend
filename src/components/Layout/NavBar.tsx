@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { BlockchainStateModel } from './Layout';
+import LotteryCard from '../Card';
 
 export interface INavBarProps {
   blockchain: BlockchainStateModel;
@@ -39,23 +40,34 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
       }
     };
 
-    console.log('NavBar > useEffect > BEFORE getBalance');
     getBalance();
-    console.log('NavBar > useEffect > AFTER getBalance');
   }, [props.blockchain.isConnected]);
 
   const balanceContainer: JSX.Element = props.blockchain.accountAddress ? (
     <Button
       onClick={() =>
         props.accountClickHandler(
-          <div>
-            <h3>{props.blockchain.balance}</h3>
-          </div>,
+          <LotteryCard
+            actions={
+              <Button color="primary" size="small">
+                Disconnect (todo)
+              </Button>
+            }
+            content={
+              <Fragment>
+                <Typography color="textSecondary">Balance:</Typography>
+                <Typography variant="h4" component="h4">
+                  {props.blockchain.balance} ETH
+                </Typography>
+              </Fragment>
+            }
+          />,
         )
       }
       color="inherit"
     >
-      {props.blockchain.accountAddress}
+      {props.blockchain.accountAddress?.slice(0, 5)}(...)
+      {props.blockchain.accountAddress?.slice(props.blockchain.accountAddress.length - 5)}
     </Button>
   ) : (
     <Button onClick={props.connectHandler} color="inherit">
