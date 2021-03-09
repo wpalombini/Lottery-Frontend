@@ -11,6 +11,12 @@ code {
 }
 
 /*Material UI overrides*/
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: white;
+}
 button {
   text-transform: none !important;
 }

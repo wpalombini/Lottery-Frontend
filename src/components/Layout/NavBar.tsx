@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { BlockchainStateModel } from './Layout';
 import LotteryCard from '../Card';
+import { Link } from 'react-router-dom';
 
 export interface INavBarProps {
   blockchain: BlockchainStateModel;
@@ -70,7 +71,7 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
       {props.blockchain.accountAddress?.slice(props.blockchain.accountAddress.length - 5)}
     </Button>
   ) : (
-    <Button onClick={props.connectHandler} color="inherit">
+    <Button onClick={props.connectHandler} color="inherit" variant="outlined">
       Connect Wallet
     </Button>
   );
@@ -83,8 +84,9 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Lottery
+            <Link to="/">Lottery</Link>
           </Typography>
+          <Link to="/about">About</Link>
           {balanceContainer}
         </Toolbar>
       </AppBar>

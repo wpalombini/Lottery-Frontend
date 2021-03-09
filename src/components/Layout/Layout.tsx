@@ -1,6 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { AnimatedSwitch, spring } from 'react-router-transition';
+import './Layout.css';
 import { BlockchainService } from '../../services/BlockchainService';
 import LotteryDialog from '../Dialog';
+import About from '../pages/About';
+import Home from '../pages/Home';
 import NavBar from './NavBar';
 
 export class BlockchainStateModel {
@@ -50,21 +55,52 @@ const Layout: () => JSX.Element = (): JSX.Element => {
     setSelectedDialogValue(value);
   };
 
+  const slide = (val: any) => {
+    return spring(val, {
+      stiffness: 125,
+      damping: 16,
+    });
+  };
+
+  const pageTransitions = {
+    atEnter: {
+      offset: -100,
+    },
+    atLeave: {
+      offset: slide(-150),
+    },
+    atActive: {
+      offset: slide(0),
+    },
+  };
+
   return (
-    <Fragment>
+    <Router>
       <NavBar
         accountClickHandler={handleAccountAddressClick}
         connectHandler={handleConnect}
         getBalanceHandler={handleGetBalance}
         blockchain={blockchain}
       />
+      <AnimatedSwitch
+        atEnter={pageTransitions.atEnter}
+        atLeave={pageTransitions.atLeave}
+        atActive={pageTransitions.atActive}
+        mapStyles={(styles) => ({
+          transform: `translateX(${styles.offset}%)`,
+        })}
+        className="switch-wrapper"
+      >
+        <Route exact path="/" component={Home} />
+        <Route path="/about/" component={About} />
+      </AnimatedSwitch>
       <LotteryDialog
         content={dialogContent}
         selectedValue={selectedDialogValue}
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
       />
-    </Fragment>
+    </Router>
   );
 };
 
