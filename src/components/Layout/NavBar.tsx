@@ -12,9 +12,10 @@ import { Link } from 'react-router-dom';
 
 export interface INavBarProps {
   blockchain: BlockchainStateModel;
-  getBalanceHandler: () => Promise<void>;
-  accountClickHandler: (content: JSX.Element) => void;
-  connectHandler: () => Promise<void>;
+  onBalanceClicked: () => Promise<void>;
+  onAccountClicked: (content: JSX.Element) => void;
+  onConnectClicked: () => Promise<void>;
+  onMenuClicked: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +38,7 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
   useEffect(() => {
     const getBalance: () => Promise<void> = async (): Promise<void> => {
       if (props.blockchain.isConnected) {
-        await props.getBalanceHandler();
+        await props.onBalanceClicked();
       }
     };
 
@@ -47,7 +48,7 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
   const balanceContainer: JSX.Element = props.blockchain.accountAddress ? (
     <Button
       onClick={() =>
-        props.accountClickHandler(
+        props.onAccountClicked(
           <LotteryCard
             actions={
               <Button color="primary" size="small">
@@ -71,7 +72,7 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
       {props.blockchain.accountAddress?.slice(props.blockchain.accountAddress.length - 5)}
     </Button>
   ) : (
-    <Button onClick={props.connectHandler} color="inherit" variant="outlined">
+    <Button onClick={props.onConnectClicked} color="inherit" variant="outlined">
       Connect Wallet
     </Button>
   );
@@ -80,13 +81,18 @@ const NavBar: (props: INavBarProps) => JSX.Element = (props: INavBarProps): JSX.
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            onClick={props.onMenuClicked}
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            <Link to="/">Lottery</Link>
+            <Link to="/">Lottery dApp</Link>
           </Typography>
-          <Link to="/about">About</Link>
           {balanceContainer}
         </Toolbar>
       </AppBar>

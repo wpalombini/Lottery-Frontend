@@ -7,6 +7,8 @@ import LotteryDialog from '../Dialog';
 import About from '../pages/About';
 import Home from '../pages/Home';
 import NavBar from './NavBar';
+import SideMenu, { IListItem } from './SideMenu';
+import { House, Info } from '@material-ui/icons';
 
 export class BlockchainStateModel {
   public accountAddress: string | null;
@@ -21,6 +23,7 @@ const Layout: () => JSX.Element = (): JSX.Element => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedDialogValue, setSelectedDialogValue] = useState('');
   const [dialogContent, setDialogContent] = useState(null);
+  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
   const handleConnect: () => Promise<void> = async (): Promise<void> => {
     try {
@@ -50,6 +53,10 @@ const Layout: () => JSX.Element = (): JSX.Element => {
     setDialogOpen(true);
   };
 
+  const handleToggleMenu: () => void = (): void => {
+    setIsSideMenuOpen(!isSideMenuOpen);
+  };
+
   const handleCloseDialog = (value: string) => {
     setDialogOpen(false);
     setSelectedDialogValue(value);
@@ -74,14 +81,29 @@ const Layout: () => JSX.Element = (): JSX.Element => {
     },
   };
 
+  const menuItems: IListItem[] = [
+    {
+      title: 'Home',
+      url: '/',
+      icon: <House />,
+    },
+    {
+      title: 'About',
+      url: '/about',
+      icon: <Info />,
+    },
+  ];
+
   return (
     <Router>
       <NavBar
-        accountClickHandler={handleAccountAddressClick}
-        connectHandler={handleConnect}
-        getBalanceHandler={handleGetBalance}
+        onMenuClicked={handleToggleMenu}
+        onAccountClicked={handleAccountAddressClick}
+        onConnectClicked={handleConnect}
+        onBalanceClicked={handleGetBalance}
         blockchain={blockchain}
       />
+      <SideMenu listItems={menuItems} isSideMenuOpen={isSideMenuOpen} toggleSideMenu={handleToggleMenu}></SideMenu>
       <div className="body">
         <AnimatedSwitch
           atEnter={pageTransitions.atEnter}
