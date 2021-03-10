@@ -1,3 +1,7 @@
+.body {
+  padding: 24px;
+}
+
 .switch-wrapper {
   position: relative;
 }

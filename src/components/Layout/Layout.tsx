@@ -82,18 +82,20 @@ const Layout: () => JSX.Element = (): JSX.Element => {
         getBalanceHandler={handleGetBalance}
         blockchain={blockchain}
       />
-      <AnimatedSwitch
-        atEnter={pageTransitions.atEnter}
-        atLeave={pageTransitions.atLeave}
-        atActive={pageTransitions.atActive}
-        mapStyles={(styles) => ({
-          transform: `translateX(${styles.offset}%)`,
-        })}
-        className="switch-wrapper"
-      >
-        <Route exact path="/" component={Home} />
-        <Route path="/about/" component={About} />
-      </AnimatedSwitch>
+      <div className="body">
+        <AnimatedSwitch
+          atEnter={pageTransitions.atEnter}
+          atLeave={pageTransitions.atLeave}
+          atActive={pageTransitions.atActive}
+          mapStyles={(styles) => ({
+            transform: `translateX(${styles.offset}%)`,
+          })}
+          className="switch-wrapper"
+        >
+          <Route exact path="/" component={Home} />
+          <Route path="/about/" component={About} />
+        </AnimatedSwitch>
+      </div>
       <LotteryDialog
         content={dialogContent}
         selectedValue={selectedDialogValue}
