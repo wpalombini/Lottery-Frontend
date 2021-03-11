@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { AnimatedSwitch, spring } from 'react-router-transition';
 import './Layout.css';
 import { BlockchainService } from '../../services/BlockchainService';
@@ -8,7 +8,9 @@ import About from '../pages/About';
 import Home from '../pages/Home';
 import NavBar from './NavBar';
 import SideMenu, { IListItem } from './SideMenu';
-import { House, Info } from '@material-ui/icons';
+import { AttachMoney, House, Info } from '@material-ui/icons';
+import Games from '../pages/Games';
+import { Container } from '@material-ui/core';
 
 export class BlockchainStateModel {
   public accountAddress: string | null;
@@ -64,8 +66,8 @@ const Layout: () => JSX.Element = (): JSX.Element => {
 
   const slide = (val: any) => {
     return spring(val, {
-      stiffness: 125,
-      damping: 16,
+      stiffness: 80,
+      damping: 12,
     });
   };
 
@@ -74,7 +76,7 @@ const Layout: () => JSX.Element = (): JSX.Element => {
       offset: -100,
     },
     atLeave: {
-      offset: slide(-150),
+      offset: slide(-1000),
     },
     atActive: {
       offset: slide(0),
@@ -86,6 +88,11 @@ const Layout: () => JSX.Element = (): JSX.Element => {
       title: 'Home',
       url: '/',
       icon: <House />,
+    },
+    {
+      title: 'Games',
+      url: '/games',
+      icon: <AttachMoney />,
     },
     {
       title: 'About',
@@ -104,7 +111,7 @@ const Layout: () => JSX.Element = (): JSX.Element => {
         blockchain={blockchain}
       />
       <SideMenu listItems={menuItems} isSideMenuOpen={isSideMenuOpen} toggleSideMenu={handleToggleMenu}></SideMenu>
-      <div className="body">
+      <Container maxWidth="md">
         <AnimatedSwitch
           atEnter={pageTransitions.atEnter}
           atLeave={pageTransitions.atLeave}
@@ -115,9 +122,13 @@ const Layout: () => JSX.Element = (): JSX.Element => {
           className="switch-wrapper"
         >
           <Route exact path="/" component={Home} />
+          <Route path="/games/" component={Games} />
           <Route path="/about/" component={About} />
+          <Route path="*">
+            <Redirect to="/" />
+          </Route>
         </AnimatedSwitch>
-      </div>
+      </Container>
       <LotteryDialog
         content={dialogContent}
         selectedValue={selectedDialogValue}
