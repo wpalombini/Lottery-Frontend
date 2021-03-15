@@ -8,9 +8,10 @@ import About from '../pages/About';
 import Home from '../pages/Home';
 import NavBar from './NavBar';
 import SideMenu, { IListItem } from './SideMenu';
-import { AttachMoney, House, Info } from '@material-ui/icons';
+import { AttachMoney, Build, House, Info } from '@material-ui/icons';
 import Games from '../pages/Games';
 import { Container } from '@material-ui/core';
+import Admin from '../pages/Admin';
 
 export class BlockchainStateModel {
   public accountAddress: string | null;
@@ -26,10 +27,34 @@ const Layout: () => JSX.Element = (): JSX.Element => {
   const [selectedDialogValue, setSelectedDialogValue] = useState('');
   const [dialogContent, setDialogContent] = useState(null);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState([
+    {
+      title: 'Home',
+      url: '/',
+      icon: <House />,
+    },
+    {
+      title: 'Games',
+      url: '/games',
+      icon: <AttachMoney />,
+    },
+    {
+      title: 'About',
+      url: '/about',
+      icon: <Info />,
+    },
+  ]);
 
   const handleConnect: () => Promise<void> = async (): Promise<void> => {
     try {
       await blockchainService.connect();
+
+      if (blockchainService.isAdmin()) {
+        setMenuItems((currentMenuItems: Array<IListItem>) => [
+          ...currentMenuItems,
+          { title: 'Admin', url: '/admin', icon: <Build /> },
+        ]);
+      }
 
       setBlockchain({
         ...blockchain,
@@ -83,24 +108,6 @@ const Layout: () => JSX.Element = (): JSX.Element => {
     },
   };
 
-  const menuItems: IListItem[] = [
-    {
-      title: 'Home',
-      url: '/',
-      icon: <House />,
-    },
-    {
-      title: 'Games',
-      url: '/games',
-      icon: <AttachMoney />,
-    },
-    {
-      title: 'About',
-      url: '/about',
-      icon: <Info />,
-    },
-  ];
-
   return (
     <Router>
       <NavBar
@@ -122,8 +129,9 @@ const Layout: () => JSX.Element = (): JSX.Element => {
           className="switch-wrapper"
         >
           <Route exact path="/" component={Home} />
-          <Route path="/games/" component={Games} />
           <Route path="/about/" component={About} />
+          <Route path="/admin/" component={Admin} />
+          <Route path="/games/" component={Games} />
           <Route path="*">
             <Redirect to="/" />
           </Route>

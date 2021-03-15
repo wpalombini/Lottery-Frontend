@@ -11,7 +11,7 @@ export interface ISideMenuProps {
 export interface IListItem {
   title: string;
   url: string;
-  icon: any;
+  icon: JSX.Element;
 }
 
 const useStyles = makeStyles({

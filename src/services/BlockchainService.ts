@@ -8,6 +8,11 @@ export class BlockchainService {
     return typeof this.web3 !== 'undefined' && (await this.web3.eth.getChainId()) > 0;
   }
 
+  public isAdmin(): boolean {
+    // TODO: find whether the default account is the smart contract's admin
+    return this.web3.eth.defaultAccount === '0x9a6BB2BE1978371D662C9B9F6f5C9Ce56205c11E';
+  }
+
   public async connect(): Promise<void> {
     if (this._window.ethereum) {
       try {
